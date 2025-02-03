@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Slider</title>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f3e4e4;
+        }
+
+        .slider {
+            position: relative;
+            width: 700px;
+            overflow: hidden;
+        }
+
+        .slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            min-width: 100%;
+        }
+
+        img {
+            width: 100%;
+            display: block;
+        }
+
+        .prev,
+        .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        .dots {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .dot {
+            width: 50px;
+            height: 5px;
+            background: gray;
+            display: inline-block;
+            margin: 5px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .active {
+            background: black;
+        }
+    </style>
+</head>
+<!-- Вашей задачей является создание веб-слайдера для отображения изображений на веб-странице. Слайдер должен позволять переключаться между изображениями и отображать их в центре экрана.
+
+1. Создайте интерфейс веб-страницы, который включает в себя следующие элементы:
+
+a. Контейнер для отображения текущего изображения.
+b. Кнопки "Предыдущее изображение" и "Следующее изображение" для переключения между изображениями.
+c. Навигационные точки (индикаторы) для быстрого переключения между изображениями.
+
+2. Используйте HTML для создания элементов интерфейса.
+
+3. Используйте JavaScript для обработки событий:
+
+a. При клике на кнопку "Предыдущее изображение" должно отображаться предыдущее изображение.
+b. При клике на кнопку "Следующее изображение" должно отображаться следующее изображение.
+c. При клике на навигационные точки, слайдер должен переключаться к соответствующему изображению.
+
+4. Слайдер должен циклически переключаться между изображениями, то есть после последнего изображения должно отображаться первое, и наоборот.
+
+5. Добавьте стилизацию для слайдера и элементов интерфейса с использованием CSS для улучшения внешнего вида. -->
+
+<body>
+    <div class="slider">
+        <div class="slides">
+            <div class="slide"><img src="img/picture1.jpg"
+                     alt="1"></div>
+            <div class="slide"><img src="img/picture2.jpg"
+                     alt="2"></div>
+            <div class="slide"><img src="img/picture3.jpg"
+                     alt="3"></div>
+            <div class="slide"><img src="img/picture4.jpg"
+                     alt="4"></div>
+        </div>
+        <button class="prev">&#10094;</button>
+        <button class="next">&#10095;</button>
+        <div class="dots"></div>
+    </div>
+
+    <script>
+        const slides = document.querySelector('.slides');
+        const slideImages = document.querySelectorAll('.slide');
+        const prevButton = document.querySelector('.prev');
+        const nextButton = document.querySelector('.next');
+        const dotsContainer = document.querySelector('.dots');
+
+        let currentIndex = 0;
+
+        slideImages.forEach((_, index) => {
+            const dot = document.createElement('span');
+            dot.classList.add('dot');
+            if (index === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => goToSlide(index));
+            dotsContainer.appendChild(dot);
+        });
+
+        const dots = document.querySelectorAll('.dot');
+
+        function updateSlide() {
+            slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[currentIndex].classList.add('active');
+        }
+
+        function goToSlide(index) {
+            currentIndex = index;
+            updateSlide();
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % slideImages.length;
+            updateSlide();
+
+        }
+
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + slideImages.length) % slideImages.length;
+            updateSlide();
+        }
+
+
+        nextButton.addEventListener('click', nextSlide);
+        prevButton.addEventListener('click', prevSlide);
+    </script>
+</body>
+
+</html>
