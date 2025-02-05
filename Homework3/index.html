@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body {
+            padding-bottom: 50px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 10px 10px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .photographer {
+            color: rgb(158, 155, 155);
+        }
+
+        .btnLike {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            height: 45px;
+            width: 140px;
+        }
+
+        .likeCount {
+            font-size: 12px;
+            padding-left: 16px;
+        }
+
+        .transform {
+            font-size: 20px;
+        }
+
+        .transform .likeCount {
+            padding: 0;
+        }
+    </style>
+</head>
+
+<!-- • Создайте HTML-страницу с элементами: изображение, имя фотографа, кнопка "лайк" и счетчик лайков.
+• Используя JavaScript и ваш API-ключ, получите случайное изображение из Unsplash каждый раз, когда пользователь загружает страницу.
+• Отобразите информацию о фотографе под изображением.
+• Реализуйте функционал "лайка". Каждый раз, когда пользователь нажимает кнопку "лайк", счетчик должен увеличиваться на единицу. -->
+
+<body>
+    <div class="container">
+        <h1>Случайное фото из Unsplash</h1>
+        <img src=""
+             alt="Случайное фото"
+             class="photo">
+        <p>Автор фото: <span class="photographer"></span></p>
+        <button class="btnLike">Лайк ❤️<span class="likeCount"> </span></button>
+    </div>
+
+    <script>
+        const apiKey = 'Сюда вставьте ваш ключ';
+        const url = `https://api.unsplash.com/photos/random?client_id=${apiKey}`;
+        const photoElem = document.querySelector('.photo');
+        const photographerElem = document.querySelector('.photographer');
+        const likeButton = document.querySelector('.btnLike');
+        const likeCounterElem = document.querySelector('.likeCount');
+
+        let likeCounter = 0;
+        likeCounterElem.textContent = likeCounter;
+        let loadingText = ['загрузка', 'загрузка.', 'загрузка..', 'загрузка...'];
+        let index = 0;
+
+
+
+        async function fetchPhoto() {
+            let loadingInterval = setInterval(() => {
+                photographerElem.textContent = loadingText[index];
+                index = (index + 1) % loadingText.length;
+            }, 1000);
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                photoElem.src = data.urls.regular;
+                photographerElem.textContent = data.user.name;
+                photographerElem.style.color = 'black';
+                clearInterval(loadingInterval);
+            } catch (error) {
+                console.error('Ошибка загрузки фото', error);
+                likeButton.setAttribute('disabled', '');
+            }
+        }
+
+        likeButton.addEventListener('click', () => {
+            likeCounter++;
+            likeCounterElem.textContent = likeCounter;
+            likeButton.classList.add('transform');
+            setTimeout(() => {
+                likeButton.classList.remove('transform');
+            }, 200);
+        });
+        fetchPhoto();
+    </script>
+
+</body>
+
+</html>
